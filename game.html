@@ -1,0 +1,77 @@
+<canvas id="tempgame" width="400" height="400"></canvas>
+<div style="display:none;">
+  <img id="source"
+       src="https://pngimg.com/uploads/apple/apple_PNG12405.png"
+       width="300" height="227">
+</div>
+<script>
+window.onload=function() {
+    canv=document.getElementById("tempgame");
+    c=canv.getContext("2d");
+    document.addEventListener("keydown",keyPress);
+    setInterval(game,1000/20);
+}
+
+player_x=player_y=10;
+g_size=t_count=20;
+apple_x=apple_y=15;
+x_vel=y_vel=0;
+snake=[];
+tail = 5;
+
+function keyPress(evt) {
+    switch(evt.keyCode) {
+        case 37:
+            x_vel=-1;y_vel=0;
+            break;
+        case 38:
+            x_vel=0;y_vel=-1;
+            break;
+        case 39:
+            x_vel=1;y_vel=0;
+            break;
+        case 40:
+            x_vel=0;y_vel=1;
+            break;
+    }
+}
+
+function game() {
+    player_x+=x_vel;
+    player_y+=y_vel;
+    if(player_x<0) {
+        player_x= t_count-1;
+    }
+    if(player_x>t_count-1) {
+        player_x= 0;
+    }
+    if(player_y<0) {
+        player_y= t_count-1;
+    }
+    if(player_y>t_count-1) {
+        player_y= 0;
+    }
+	
+    c.fillStyle="green";
+    c.fillRect(0,0,canv.width,canv.height);
+    c.fillStyle="yellow";
+	
+    for(var i=0;i<snake.length;i++) {
+        c.fillRect(snake[i].x*g_size,snake[i].y*g_size,g_size-2,g_size-2);
+        if(snake[i].x==player_x && snake[i].y==player_y) {
+            tail = 3;
+        }
+    }
+    snake.push({x:player_x,y:player_y});
+    while(snake.length>tail) {
+    snake.shift();
+    } 
+    if(apple_x==player_x && apple_y==player_y) {
+        tail++;
+        apple_x=Math.floor(Math.random()*t_count);
+        apple_y=Math.floor(Math.random()*t_count);
+    }    
+	c.drawImage(source, apple_x*g_size, apple_y*g_size, g_size-2, g_size-2);
+}
+
+</script>
